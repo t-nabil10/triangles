@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les Triangles - Géométrie</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f766e;
+            --bg: #f3f4f6;
+            --text: #111827;
+            --muted: #6b7280;
+            --card-bg: #ffffff;
+            --radius: 10px;
+            --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            line-height: 1.5;
+            background: radial-gradient(circle at top, #e0f2fe, #eef2ff 40%, #f9fafb 80%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 16px;
+            font-size: 13px;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 18px;
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+        }
+
+        /* HEADER */
+        header {
+            background: radial-gradient(circle at top left, #1d4ed8, #0f172a);
+            color: white;
+            padding: 18px 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(59,130,246,0.4), transparent 70%);
+            top: -80px;
+            right: -60px;
+            opacity: 0.7;
+        }
+
+        .header-main {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1;
+        }
+
+        .header-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 14px;
+            background: rgba(15,23,42,0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        h1 {
+            font-size: 1.3rem;
+            font-weight: 650;
+            letter-spacing: 0.01em;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 3px 9px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.5);
+        }
+
+        .content {
+            padding: 18px 18px 20px;
+        }
+
+        /* SECTION */
+        .section {
+            margin-bottom: 18px;
+            padding: 16px 14px 16px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #eff6ff, #f9fafb);
+            border: 1px solid rgba(148, 163, 184, 0.4);
+        }
+
+        h2 {
+            color: #0f172a;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            font-weight: 650;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 4px;
+            border-bottom: 2px solid rgba(37, 99, 235, 0.25);
+        }
+
+        h2 i {
+            color: var(--primary);
+        }
+
+        h3 {
+            color: var(--primary-dark);
+            margin: 8px 0 6px;
+            font-size: 0.93rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* BLOCS DE TEXTE */
+        .rule-box {
+            background: linear-gradient(to right, #dcfce7, #ecfdf5);
+            padding: 10px 12px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border: 1px solid rgba(22, 163, 74, 0.3);
+            font-size: 0.85rem;
+        }
+
+        .example-box {
+            background: #ffffff;
+            padding: 12px 12px 10px;
+            border-radius: 12px;
+            margin: 12px 0;
+            border: 1px solid rgba(129, 140, 248, 0.4);
+            box-shadow: 0 6px 14px rgba(148, 163, 184, 0.18);
+        }
+
+        .data-sample {
+            background: linear-gradient(to right, #fef9c3, #fffbeb);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 8px 0 4px;
+            font-family: "JetBrains Mono", "Courier New", monospace;
+            overflow-x: auto;
+            white-space: nowrap;
+            border: 1px dashed rgba(234, 179, 8, 0.7);
+            font-weight: 600;
+            color: #92400e;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .questions {
+            margin: 12px 0 4px;
+            counter-reset: question-counter;
+        }
+
+        .question-wrapper {
+            margin-bottom: 10px;
+        }
+
+        .question {
+            padding: 10px 10px 9px;
+            background: linear-gradient(to right, #f9fafb, #edf2ff);
+            border-radius: 11px;
+            border: 1px solid rgba(129, 140, 248, 0.4);
+            display: grid;
+            grid-template-columns: auto 1fr;
+            column-gap: 8px;
+            row-gap: 4px;
+            align-items: flex-start;
+        }
+
+        .question::before {
+            content: counter(question-counter);
+            counter-increment: question-counter;
+            font-weight: 600;
+            color: #ffffff;
+            background: linear-gradient(135deg, #6366f1, #4338ca);
+            width: 22px;
+            height: 22px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            margin-top: 2px;
+        }
+
+        .question-content {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+
+        .question .answer-btn {
+            grid-column: 2 / 3;
+        }
+
+        .answer-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.18s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 2px;
+        }
+
+        .answer-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+        }
+
+        .answer {
+            background: linear-gradient(to right, #ecfeff, #e0f2fe);
+            padding: 8px 9px;
+            border-radius: 9px;
+            margin-top: 6px;
+            margin-left: 30px;
+            border-left: 3px solid var(--secondary);
+            display: none;
+            font-size: 0.83rem;
+        }
+
+        .answer.show {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-3px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .note {
+            background: #fffbeb;
+            padding: 9px 10px;
+            border-radius: 10px;
+            margin: 10px 0 4px;
+            border: 1px solid rgba(234, 179, 8, 0.5);
+            display: flex;
+            align-items: flex-start;
+            gap: 7px;
+            font-size: 0.81rem;
+            color: #78350f;
+        }
+
+        p {
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+
+        .math-example {
+            font-family: 'Courier New', monospace;
+            font-size: 1.25rem;
+            text-align: center;
+            margin: 15px 0;
+            padding: 12px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .properties-box {
+            background: linear-gradient(to right, #fef3c7, #fffbeb);
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin: 12px 0;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            font-size: 0.85rem;
+        }
+
+        .property-item {
+            margin: 8px 0;
+            padding-left: 8px;
+            border-left: 3px solid #f59e0b;
+        }
+
+        .construction-box {
+            background: linear-gradient(to right, #e0e7ff, #ede9fe);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 2px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .construction-step {
+            margin: 10px 0;
+            padding: 8px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #6366f1;
+        }
+
+        .chapter-divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .chapter-divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #2563eb, transparent);
+            z-index: 1;
+        }
+
+        .chapter-divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            z-index: 2;
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* BOUTON EN BAS DE PAGE */
+        .open-link-container {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .open-link-btn {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            color: #f9fafb;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .open-link-btn i {
+            font-size: 1rem;
+        }
+
+        .open-link-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(22, 163, 74, 0.4);
+            background: linear-gradient(135deg, #15803d, #166534);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe, #e0e7ff);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #3b82f6;
+            text-align: center;
+        }
+
+        .info-box i {
+            color: #1d4ed8;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px 10px 12px;
+            background: #0f172a;
+            color: #e5e7eb;
+            font-size: 0.75rem;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            header {
+                padding: 14px 14px 12px;
+            }
+
+            .content {
+                padding: 14px 12px 16px;
+            }
+
+            .section {
+                padding: 12px 10px 14px;
+            }
+
+            h1 {
+                font-size: 1.05rem;
+            }
+
+            .header-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 18px;
+            }
+
+            .answer {
+                margin-left: 24px;
+            }
+
+            .open-link-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+        }
+
+        .triangle-visual {
+            text-align: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 10px;
+            border: 2px dashed #0ea5e9;
+        }
+
+        .triangle-symbol {
+            font-size: 3rem;
+            color: #2563eb;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-main">
+                <div class="header-icon">△</div>
+                <div>
+                    <h1>Les Triangles - Géométrie</h1>
+                    <div class="subtitle">
+                        Mathématiques - Figures géométriques
+                        <span class="tag">Leçon interactive</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="content">
+            
+
+            <!-- Chapitre 2: Triangle isocèle -->
+            <section class="section">
+                <h2><i class="fas fa-triangle"></i> Chapitre 2: Triangle isocèle</h2>
+                
+                <div class="rule-box">
+                    <h3><i class="fas fa-ruler-combined"></i> a) Définition :</h3>
+                    <div class="property-item">
+                        <p>• Un triangle isocèle est un triangle qui a deux côtés de même longueur.</p>
+                    </div>
+                    <div class="property-item">
+                        <p>• Le sommet commun aux côtés de même longueur est appelé le sommet principal.</p>
+                    </div>
+                    <div class="property-item">
+                        <p>• Le côté opposé au sommet principal est appelé la base.</p>
+                    </div>
+                </div>
+
+                <div class="properties-box">
+                    <h3><i class="fas fa-sticky-note"></i> c) Remarques :</h3>
+                    <p>Les petits traits signalent que certains côtés ont la même longueur.</p>
+                </div>
+
+                <div class="triangle-visual">
+                    <div class="triangle-symbol">🔺</div>
+                    <p><strong>Triangle isocèle</strong> - 2 côtés égaux, 1 base</p>
+                </div>
+                
+                <div class="example-box">
+                    <h3><i class="fas fa-lightbulb"></i> b) Exemple :</h3>
+                    
+                    <div class="questions">
+                        <div class="question-wrapper">
+                            <div class="question">
+                                <div class="question-content">
+                                    Dans un triangle ABC isocèle en A, quels sont les côtés égaux ?
+                                </div>
+                                <button class="answer-btn" onclick="toggleAnswer(2, event)">
+                                    <i class="fas fa-eye"></i> Voir la réponse
+                                </button>
+                            </div>
+                            <div class="answer" id="answer2">
+                                <p>Les côtés [AB] et [AC] sont égaux. Le côté [BC] est la base.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="question-wrapper">
+                            <div class="question">
+                                <div class="question-content">
+                                    Combien mesure chaque angle à la base d'un triangle isocèle rectangle ?
+                                </div>
+                                <button class="answer-btn" onclick="toggleAnswer(3, event)">
+                                    <i class="fas fa-eye"></i> Voir la réponse
+                                </button>
+                            </div>
+                            <div class="answer" id="answer3">
+                                <p>Dans un triangle isocèle rectangle, les angles à la base mesurent 45° chacun.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+                     
+
+            <!-- INFORMATION SUR LES FIGURES -->
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <h3>Information importante</h3>
+                <p><strong>Les vraies figures géométriques et les exercices pratiques seront donnés en classe par le professeur.</strong></p>
+                <p>Cette page sert de support théorique pour comprendre les concepts des triangles.</p>
+            </div>
+
+            <!-- BOUTON À LA FIN DE LA PAGE -->
+            <div class="open-link-container">
+                <button class="open-link-btn" onclick="openHtmlPage()">
+                    <i class="fas fa-window-restore"></i>
+                    Si la page ne s'affiche pas correctement : Cliquez ici
+                </button>
+            </div>
+        </div>
+        
+        <footer>
+            <p><span>△</span> Les Triangles - Géométrie - Mathématiques <span>△</span></p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleAnswer(questionNumber, event) {
+            const answer = document.getElementById(`answer${questionNumber}`);
+            const button = event.currentTarget;
+            
+            if (answer.classList.contains('show')) {
+                answer.classList.remove('show');
+                button.innerHTML = '<i class="fas fa-eye"></i> Voir la réponse';
+            } else {
+                answer.classList.add('show');
+                button.innerHTML = '<i class="fas fa-eye-slash"></i> Cacher la réponse';
+            }
+        }
+
+        function openHtmlPage() {
+            // Remplacez cette URL par le lien vers votre page si nécessaire
+            const url = "#";
+            window.open(url, "_blank", "noopener,noreferrer");
+        }
+    </script>
+</body>
+</html>
